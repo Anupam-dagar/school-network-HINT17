@@ -5,5 +5,5 @@
 ### Features
 - Lets students know about various events in a college/school.
 - Student interaction with teachers,other students and colleges/schools.
-### Desk no A17
+### Table no A17
 
