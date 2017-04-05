@@ -1,0 +1,10 @@
+git status
+
+git config --global user.name "dbads"
+git config --global user.email "deepakbharti823@gmail.com"
+
+git add schools
+git commit -m "add project settings"
+git push
+git checkout
+git rm

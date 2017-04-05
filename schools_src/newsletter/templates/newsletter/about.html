@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+  {% trans 'hohos - About us' %}
+{% endblock %}
+
+
+{% block head %}
+  <script type = "text/javascript" src = "{% static 'jquery/jqueryui.js' %}"></script>
+  <link href="{% static 'css/profile.css' %}" rel="stylesheet">
+  <link href="{% static 'css/feeds.css' %}" rel="stylesheet"> 
+  <script src="{% static 'js/jquery.bullseye-1.0-min.js' %}"></script>
+  <script src="{% static 'js/feeds_profile.js' %}"></script>
+
+<script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script> 
+
+ 
+<style>  
+
+#downitems a {color: black;}
+#downitems i {color: white;}
+
+.container1 {  
+    width: 30em;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+.navbar-fixed-top { 
+  margin-bottom: 0px !important;
+  background-color: #008080;
+}
+.jumbotron { 
+  position: relative;
+  background-color:#008080; 
+  margin-top: -21px;
+}
+.gray{color: gray;}
+.greentext{color: #008080;}
+.myview {color: white; padding: 2px; font-size: 17px; min-width: 500px;}
+.myview a {color: yellow;}
+.findme li, a {list-style: none; color:white; padding: 3px; }
+.hr {border-color: gray}
+.humans {color: white; font-size: 17px;  max-width: 500px;
+margin-top: 50px; margin-bottom: -250px;} 
+
+.products {color: white; font-size: 17px;  max-width: 500px; margin-left: 100px;margin-top: 50px; }
+
+.future {padding-left: 350px; padding-right: 350px; color: white; font-size: 17px;}
+</style> 
+{% endblock %}
+
+      <ul class="findme">
+        <li>
+          <i class="fa fa-quora fa-1x fa-fw"></i>
+          <a href="https://www.quora.com/profile/Deepak-Bharti-16">Quora</a>
+        </li>
+        <li>
+          <i class="fa fa-facebook fa-1x fa-fw"></i>
+          <a href="https://www.facebook.com/Ddronearkon">Facebook</a>
+        </li>
+        <li>
+          <i class='fa fa-envelope fa-1x fa-fw'>
+          Email : deepakbharti823@gmail.com</i>
+        </li>
+      </ul>
+
+
+
+{% block jumbotron %}
+<div class="jumbotron">      
+  <div class="container">
+    <div class="row">
+      
+      <div class="col-md-4 col-md-offset-1">
+        <div class="LI-profile-badge"  data-version="v1" data-size="medium" data-locale="en_US" data-type="vertical" data-theme="dark" data-vanity="deepak-bharti-6a9859107"><a class="LI-simple-link" href='https://in.linkedin.com/in/deepak-bharti-6a9859107?trk=profile-badge'>Deepak Bharti</a></div>
+      
+      <hr class="hr" >
+        <tr>
+          <td>
+          <i class="fa fa-quora fa-1x fa-fw"></i>
+          <a href="https://www.quora.com/profile/Deepak-Bharti-16">Quora</a>
+          </td>
+          <td>
+          <i class="fa fa-facebook fa-1x fa-fw"></i>
+          <a href="https://www.facebook.com/Ddronearkon">Facebook</a>            
+          </td>
+          <td>
+          <i class="fa fa-linkedin fa-1x fa-fw"></i>
+          <a href="https://www.linkedin.com/in/deepak-bharti-6a9859107/">Linkedin</a>            
+          </td>       
+        </tr>
+      </div>
+
+
+      <div class="col-md-4 col-md-offset-1">
+
+  <h3 style="text-align:center;"> Working to upgrade the Nation and the  World </h3>
+<hr class="hr" >
+
+<div class="myview">
+We might have better things than we have now. This will bring great changes in us and so around the world.I highly wish to see people getting the best of available resources.I have been working to make it true for my School days.And now I am close to bring some changes.
+</div>
+
+<span style="font-weight:bold;">-CEO and Founder hohos</span>
+
+  <hr class="hr">
+
+  <div style="color:white; font-size:17px; margin-top:65px;">
+    {% if request.user.is_authenticated %}
+    <div style="">
+    Talk to <span style="font-weight:bold; color:yellow;">Deepak</span> at his live hohos profile
+    <a style="width:500px;" class="btn btn-success" href="{% url 'profile' 'deepakbharti' %}" role="button"><i class="fa fa-superpowers fa-spin fa-1x fa-fw "></i>Welcome at deepak's live profile &raquo;</a></div>
+    {% else %}
+    <div>
+    Talk to <span style="font-weight:bold; color:yellow;">Deepak</span> at his live hohos profile
+    <a style="width:500px;" class="btn btn-success" href="{% url 'profile' 'deepakbharti' %}" role="button"><i class="fa fa-superpowers fa-spin fa-1x fa-fw "></i>Welcome at deepak's live profile &raquo;</a></div>
+    {% endif %}
+  </div>
+
+    </div>
+    </div> 
+  </div>  
+</div> 
+
+{% endblock %}
+
+{% block main_fluid %}
+
+<div class="row" style="background-color:#008080; height:550px; margin-top:-30px;">
+
+<hr class="hr">
+
+  <div class="col col-md-7 col-md-offset-1">
+
+    <div class="humans">
+    <a href="{% url 'profilefeeds' %}" type="button" class="btn btn-success btn-lg">Human</a>
+      Hohos is a Social Network for People. 
+      The original Idea was to let people copy the selfi styles of their friends. Then we at hohos extended this Idea. We 
+      added some thrilling features. And now at hohos we are 
+      powering human to share their feelings about their friends on their live profile, while other friends can see that and tell whether they agree or not and can write a judgement for this. 
+    </div>
+  </div>
+
+
+  <div class="col col-md-3">
+      <img src="{% static 'img/hohos.gif' %}" class="img img-responsive">
+      <a style="margin-left:35px; margin-right:50px;" type="  button" class="btn btn-success" href="{% url 'profile' 'hohos' %}">  
+<!-- this url will be set to a constant
+      account of hohos so, it will be done when its launched  --> 
+      <span class="glyphicon glyphicon-share-alt"></span>Talk to us @hohos</a>
+  </div>
+</div>
+
+
+<div class="row" style="background-color:#008080; height:600px; margin-top:-200px;">
+
+<hr class="hr">
+
+  <div class="col col-md-3">
+      <img src="{% static 'img/hohos.gif' %}" class="img img-responsive" style="margin-left:100px;">
+      <a style="margin-left:147px; margin-right:50px;" type="  button" class="btn btn-danger" href="{% url 'profile' 'hohos' %}">  
+<!-- this url will be set to a constant
+      account of hohos so, it will be done when its launched  --> 
+      <span class="glyphicon glyphicon-share-alt"></span>Talk to us @hohos</a>
+  </div>
+
+  <div class="col col-md-7 col-md-offset-1">
+
+    <div class="products">
+    <a href="{% url 'product_profilefeeds' %}" type="button" class="btn btn-danger btn-lg">Products</a>
+      Hohos is a Social Network for Products. 
+      hohos allows people to represent their products and things, this way people can talk to the products as if they are live. Its like asking Yureka plus "Why should I purchase you ?". It's like talking your own cell phone, your Laptop and talking everything things around you.
+    </div>
+  </div>
+
+</div>
+
+
+<div class="row" style="background-color:#008080; margin-top:-200px; margin-bottom:-67px;">
+  <hr class="hr">
+
+<!--  <img src="{% static 'img/pic10.jpg' %}" class="img-responsive img-circle"> -->
+
+      <h3 style="text-align:center;">What's new ?</h3>  
+   <p class="future">
+   We are working on another big project, Which we beleive is something,
+   gonna change the way Colleges,Schools and Coaching institues in India and around the world work.
+   We beleive these assets to be keys to bring the big changes in the society. So We are very eager 
+   to present it to College, School and Coaching guys as you are the prominent part of the system , 
+   We beleive.
+    </p>
+    <br><br><br><br>
+
+</div>
+
+
+{% endblock main_fluid %}
+
+
+
+{% block footer %}
+
+<footer style="background-color:#008080;">
+<div id="downitems" class="container-fluid" style='padding: 10px; margin-top: 70px; height: 50px; background-color: #008080;'>
+<p style="text-align:center;">
+  
+  <a href="{% url 'contact' %}"><i class="fa fa-volume-control-phone fa-1x fa-fw"></i>Contact</a> | 
+  <a href="https://www.linkedin.com/in/hohos-guys-48082313a/"><i class="fa fa-linkedin fa-1x fa-fw"></i>LinkedIn</a> | 
+  <a href="https://www.facebook.com/Hohos-1825301447690434/"><i class="fa fa-facebook fa-1x fa-fw"></i>Facebook</a> | 
+  <a href="https://twitter.com/hohosguys"><i class="fa fa-twitter fa-1x fa-fw"></i>Twitter</a> | 
+  <a href="https://www.quora.com/profile/Hohos-Guys"><i class="fa fa-quora fa-1x fa-fw"></i>Quora</a> | 
+  <a href="https://plus.google.com/u/0/114682388073028099952"><i class="fa fa-google-plus fa-1x fa-fw"></i>Google+</a> | 
+  <a href="">Hohos</a>
+
+
+</p>
+</div>
+</footer>
+
+ {% endblock %} 
+
+
+
+
+
+<!-- 
+
+
+from quora +++++++++++++++++=
+
+We might have better things than we’ve now. And this will bring great changes in us and so around the world.I highly wish to see people getting the best of available resources.I’ve been working to make it true for my School days.And now I am close to bring some changes.
+I’m still working on this you can meet me here at www.about.me/deepak_bharti
+
+
+from Linked in +++++++++++++++++++++
+
+I am currently in B.tech 2nd Year in Computer Science at Motilal Nehru National Institute of Technology. I strongly wish that the People should get the best of available.
+If you happen to have a glimpse of Education sector its quite opposite there, i.e more than 50% students are not getting what they should be.I realized this during my Higher Secondary and I decided to correct it.And now I am on the way...Imperial Arkon is just the initiative I am working on to fix this.You can visit me at www.about.me/deepak_bharti.
+ -->
+
+

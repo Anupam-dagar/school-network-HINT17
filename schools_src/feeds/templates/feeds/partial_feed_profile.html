@@ -1,0 +1,112 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load humanize %}   
+   
+   {% block head %}
+   <style type="text/css">
+ .green {
+    color: #008080;
+ } 
+/* .red {
+  color: red; 
+ } */
+
+ul.stream li div.feed-container:hover{
+  cursor: pointer;
+  background-color: #f5f8fa;
+} 
+ 
+   </style>   
+   {% endblock %}  
+ 
+<li feed-id="{{ feed.pk }}" csrf="{{ csrf_token }}" profile-pk="{{feed.profile_pk}}" style="background-color:white;" class="hoverli"> 
+
+  <div class="feed-container">
+    <a href="{% url 'profile' feed.user.username %}">
+      <img src="{{ feed.user.profile.get_picture }}" class="user" style="max-width:60px; max-height:60px;">
+    </a>
+
+    <div class="post">
+      {% if feed.user == user %}
+        <span class="glyphicon glyphicon-remove remove-feed" title="{% trans 'Click to remove this feed' %}"></span>
+      {% endif %}
+
+      <h3><a style="font-size:16px" href="{% url 'profile' feed.user.username %}">{{ feed.user.profile.get_screen_name }}</a>
+      <small>{{ feed.date|naturaltime }}</small>
+      <small>wrote on</small>
+      {% if feed.to_user and feed.to_user != feed.user %}
+      <a style="font-size:16px" href="{% url 'profile' feed.to_user.username %}">{{ feed.to_user.profile.get_screen_name }}'s</a> <small>profile</small>
+      {% elif feed.to_user %}
+      <a style="font-size:16px" href="{% url 'profile' feed.to_user.username %}">own</a> <small>profile</small>
+      {% endif %}
+      </h3>
+      <p style="color:#184334; margin-bottom:2px; margin-top:7px;">{{ feed.linkfy_post|safe }}</p>
+      <p>
+      </p>
+      
+{% if not request.user.is_anonymous %} 
+     
+      <div class="interaction">
+
+      {% if feed.likes or feeds.comments %}
+      <!-- <i class="fa fa-thumbs-up fa-lg fa-fw" style="color:lightpink;"></i> --><span class="likers">
+      {% if feed.likes %}<a href="{% url 'feeds' feed.id %}" style="color:gray;">{{feed.likes}} Agreed</span></a>
+      {% endif %}
+      {% if feed.comments %}<a href="{% url 'feeds' feed.id %}" style="color:gray;"><span>{{feed.comments}}</span> judged</span></a>
+      {% endif %}
+      <br style="margin-top:5px; margin-bottom:3px;" >
+      {% endif %}
+
+
+        {% if user in feed.get_likers %}
+          <a style="color:gray; font-size:12px;" href="#" class="like unlike">
+            <span class="fa fa-thumbs-up fa-1x green"></span>
+            <span class="text">{% trans 'Disagree' %}</span>
+          </a>
+        {% else %}
+          <a style="color:gray; font-size:12px;" href="#" class="like">
+            <span class="fa fa-thumbs-up fa-1x  green"></span>
+            <span class="text">{% trans 'Agree' %}</span>
+          </a>
+        {% endif %}
+        <a style="color:gray; font-size:12px;" href="#" class="comment">
+          <!-- <span class="glyphicon glyphicon-pencil"></span> --> 
+          <i class="fa fa-comments fa-1x green" aria-hidden="true"></i>
+          {% trans 'judge' %}
+        </a>
+      </div>
+      <div class="comments">
+        <form role="form" method="post" action="{{ comment }}" onsubmit="return false">
+          {% csrf_token %}
+          <input type="hidden" name="feed" value="{{ feed.pk }}">
+          <input type="text" class="form-control input-sm" placeholder="{% trans 'Write a comment...' %}" name="post" maxlength="255">
+        </form>
+        <ol class="clearfix">
+          {% comment %} Place holder to load feed comments {% endcomment %}
+        </ol>
+      </div>
+
+{% else %}  {# if user is not authenticted redirect them to login #}
+
+      <h3 style="margin-top:3px;">
+      {% if feed.likes %}  
+      <i class="fa fa-thumbs-up fa-1x  green"></i>
+      <a href="{% url 'signup_human' %}">
+      <small> {{ feed.likes }} Agreed</small>
+      </a> 
+      {% endif %}
+      {% if feed.comments %}
+      <a href="{% url 'signup_human' %}">
+      <small>{{ feed.comments }} Judged</small>
+      </a>
+      {% endif %}
+      </h3>
+
+{% endif %}
+
+    </div>
+  </div>
+
+  <hr style="border-color:lightgray; margin-top:20px; margin-bottom:-8px;">
+</li>
+

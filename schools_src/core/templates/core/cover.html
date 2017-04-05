@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %} 
+ 
+{% block title %}
+  {% trans 'schools - Login' %}
+{% endblock %}
+
+
+{% block head %}
+  <link href="{% static 'css/cover.css' %}" rel="stylesheet">
+
+<style type="text/css">
+ /* http://www.menucool.com/slider/jsImgSlider/images/image-slider-2.jpg*/
+ 
+body {
+  background: url('{% static "img/login_cover.jpg" %}') no-repeat center center fixed;
+  /*background-repeat:no-repeat;*/
+  background-size: cover; 
+/*  opacity: 0.5;
+  filter: alpha(opacity=50);*/
+} 
+ .greenfield {border-color: green; color: green;} 
+ .greentext {color: green; border-color: green;}
+ .logo:hover {color: green;}
+</style>  
+ 
+{% endblock head %}
+
+{% block body %}
+  <div class="cover">
+    <a style="text-decoration:none;" href="{% url 'home' %}"><h1 class="logo">Schools</h1></a>
+    {% if form.non_field_errors %}
+      {% for error in form.non_field_errors %}
+        <div class="alert alert-danger alert-dismissable">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          {{ error }}
+        </div>
+      {% endfor %}
+    {% endif %}
+    <div class="login">
+      <form method="post" action="{% url 'login' %}" role="form">
+        {% csrf_token %}
+        <div class="form-group{% if form.username.errors %} has-error{% endif %}">
+          <input type="text" class="form-control greenfield" id="username" name="username" placeholder="username">
+          {% for error in form.username.errors %}
+            <label class="control-label"><span class="greentext">{{ error }}</span></label>
+          {% endfor %}
+        </div>
+        <div class="form-group{% if form.password.errors %} has-error{% endif %}">
+          <input type="password" class="form-control greenfield" id="password" name="password" placeholder="password">
+          {% for error in form.password.errors %}
+            <label class="control-label"><span class="greentext">{{ error }}</span></label>
+          {% endfor %}
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-default greentext" style="color:green; border-color:green;">{% trans 'Login' %}</button>
+          <a  href="{% url 'signup_human' %}" class="btn btn-success greentext" style="color: green; background-color: white">{% trans 'Signup' %}</a>
+        </div>
+      </form>
+
+        <div class="form-group">
+          <a  href="{% url 'password_reset' %}" class="btn btn-success greentext" style="color: green; background-color: white">{% trans "Forgot Password, Don't worry!" %}</a>
+        </div>
+
+    </div>
+  </div>
+{% endblock body %}

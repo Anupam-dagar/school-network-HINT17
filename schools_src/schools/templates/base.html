@@ -1,0 +1,58 @@
+{% load staticfiles i18n %} 
+
+<!DOCTYPE html>  
+<html lang="en"> 
+  <head> 
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}welcome Hohos{% endblock %}</title> 
+   {% block content_title %}
+   {% endblock %}
+   
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">  
+<!--     <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">  
+ -->    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/hohos.css' %}?v=1" rel="stylesheet"> 
+    <!--[if lt IE 9]> 
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>    
+    <![endif]-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="{% static 'js/hohos.js' %}"></script>
+ 
+  {% block head %}
+  {% endblock %}  
+  
+  </head>
+  
+  <body style="background-color: #f2f2f2;">
+
+    {% block body %}
+
+    {% include 'header.html' %}
+      <main>
+      {% block jumbotron %}
+      {% endblock %}
+        <div class="container">
+          {% block main %}
+          {% endblock main %}
+        </div>
+        <div class="container-fluid">
+          {% block main_fluid %}
+
+          {% endblock main_fluid %}
+        </div>
+      </main>
+      
+<!-- <script src="{% static 'js/notifications.js' %}"></script> -->
+
+    {% endblock body %}
+    
+    <!-- Here u can add a script to track how users visit the website -->
+  {% block footer %}
+  {% endblock %}
+  </body>
+</html>
+ 

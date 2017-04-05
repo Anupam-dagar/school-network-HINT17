@@ -1,0 +1,93 @@
+ {% load i18n %}
+{% load staticfiles %}
+{% load humanize %}   
+     
+   {% block head %} 
+   <style type="text/css">
+ .green {  
+    color: #008080;
+ }
+/* .like .heart{ 
+  color: green; 
+ } */ 
+   </style>    
+   {% endblock %} 
+
+<li feed-id="{{ feed.pk }}" csrf="{{ csrf_token }}" style="margin-left:-100px;">
+  <div class="feed-container">
+    <a href="{% url 'profile' feed.user.username %}">
+     <!--  <img src="{{ feed.user.profile.get_picture }}" class="user"> -->
+<!--         {% if profile.profile_pic %}
+          <img class="user" src="{{ profile.profile_pic.url }}">
+        {% else %}
+          <img class="user" src="{% static 'images/profile_placeholder.jpg' %}">
+        {% endif %} -->
+ 
+    </a>
+    <div class="post">
+      {% if feed.user == user %}
+               <span class="dropdown pull-right">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color: gray;"><b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                  <span class="pull-left glyphicon glyphicon-remove remove-feed"> Remove style</span>
+                  </ul>
+              </span>
+
+
+      {% endif %}
+
+      <h3><a  href="{% url 'profile' feed.user.username %}"><small>by </small>{{ feed.user.profile.get_screen_name }}</a>
+      <small>{{ feed.date|naturaltime }}</small>
+      </h3> 
+      <p style="margin-bottom:7px; margin-top:7px color:#008080">{{ feed.linkfy_post|safe }}</p>
+      <p>
+      {% if feed.post_pic %}
+    <a href="{% url 'feeds' feed.id %}">
+    <img src="{{feed.post_pic.url}}" class="img img-responsive " style=""></a>    
+    {% endif %}
+      </p>
+      {% if request.user.is_authenticated %}
+      <div  style="margin-bottom:7px; margin-top:7px" class="interaction">
+
+      {% if feed.likes or feeds.comments %}
+      <!-- <i class="fa fa-heart fa-1x fa-fw" style="color:lightpink;"></i> --><span class="likers">
+      {% if feed.likes %}<a href="{% url 'feeds' feed.id %}" style="color:gray;"><span>{{feed.likes}} liked</span></a>
+      {% endif %}
+      {% if feed.comments %}<a href="{% url 'feeds' feed.id %}" style="color:gray;"> <span>{{feed.comments}}</span> commented</span></a>
+      {% endif %}
+      <br style="margin-top:5px; margin-bottom:3px;" >
+      {% endif %}
+
+
+        {% if user in feed.get_likers %} 
+          <a href="#" class="like unlike">
+            <span class="fa fa-heart fa-sm green"></span>
+            <span class="text">{% trans 'Unlike' %}</span>
+          </a>
+        {% else %}
+          <a href="#" class="like">
+            <span class="fa fa-heart fa-sm green"></span>
+            <span class="text">{% trans 'Like' %}</span>
+          </a>
+        {% endif %}
+        <a href="#" class="comment">
+          <!-- <span class="glyphicon glyphicon-pencil"></span> --> 
+          <i class="fa fa-comments fa-1x green" aria-hidden="true"></i>
+          {% trans 'Comment' %}
+        </a>
+      </div>
+      <div class="comments">
+        <form role="form" method="post" action="{{ comment }}" onsubmit="return false">
+          {% csrf_token %}
+          <input type="hidden" name="feed" value="{{ feed.pk }}">
+          <input type="text" class="form-control input-sm" placeholder="{% trans 'Write a comment...' %}" name="post" maxlength="255">
+        </form>
+        <ol class="clearfix">
+          {% comment %} Place holder to load feed comments {% endcomment %}
+        </ol>
+      </div>
+      {% else %}
+      {% endif %}
+    </div>
+  </div>
+</li>

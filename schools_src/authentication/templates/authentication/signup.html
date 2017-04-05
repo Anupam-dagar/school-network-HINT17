@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+{% load staticfiles i18n %} 
+{% load socialaccount %}
+
+
+{% block title %}
+  {% trans 'schools - Signup' %}
+{% endblock %}
+ 
+
+{% block head %} 
+  <link href="{% static 'css/signup.css' %}" rel="stylesheet">
+<style type="text/css">
+ /* http://www.menucool.com/slider/jsImgSlider/images/image-slider-2.jpg*/ 
+  
+body {  
+  background: url('{% static "img/login_cover.jpg" %}') no-repeat center center fixed;
+  /*background-repeat:no-repeat;*/ 
+  background-size: cover;   
+/*  opacity: 0.5; 
+  filter: alpha(opacity=50);*/
+}   
+ .whitetext {color: white;}
+ .bluetext {color: #8EB1DB;}
+ .greentext {color: green; border-color: green;}
+ .redtext {color: red; border-color: red;}
+
+</style>
+<script type = "text/javascript" src = "/static/jquery/jquery.min.js"></script>
+{% if flag == "products" %}
+<style type="text/css">  .logo a:hover {color: red;}</style>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("#human-form").hide(); 
+    $("#teacher-form").hide();
+    $("#product-form").show();
+  }); 
+</script>
+{% elif flag == "human" %}
+<style type="text/css">  .logo a:hover {color: green;}</style>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("#human-form").show(); 
+    $("#teacher-form").hide();
+    $("#product-form").hide();
+  }); 
+</script>
+{% elif flag == "teacher" %}
+<style type="text/css">  .logo a:hover {color: green;}</style>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("#teacher-form").show(); 
+    $("#human-form").hide();
+    $("#product-form").hide();
+  }); 
+{% else %}
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("#human-form").hide(); 
+    $("#product-form").hide();
+    $("#teacher-form").hide();
+  }); 
+</script>
+<style type="text/css">  .logo a:hover {color: orange;}</style>
+{% endif %}
+
+<script type="text/javascript">
+  $(document).ready(function(){
+  $("#product").click(function () {
+    $("#human-form").hide(); 
+    $("#teacher-form").hide(); 
+    $("#product-form").show();
+  });
+    $("#human").click(function () {
+    $("#teacher-form").hide(); 
+    $("#product-form").hide(); 
+    $("#human-form").show();
+  });
+  $("#teacher").click(function () {
+    $("#human-form").hide(); 
+    $("#teacher-form").show(); 
+    $("#product-form").hide();
+  });
+
+})  
+
+</script>
+{% endblock head %}
+
+
+{% block body %}
+<div class="row">
+<div class="col col-sm-6 col-sm-offset-3">
+  
+<h1 id="mydiv" class="logo" style="margin-top: 100px"><a style="text-decoration:none;" href="{% url 'home' %}">schools</a>
+<p class="logo whitetext" style="font-size:40px;">Who are You ?</p>
+</h1>
+<table style="margin-left:140px;">
+<tr>
+  <th colspan="10" align="left">
+  <button id="human" class="btn btn-success btn-default">Student</button>
+  <button id="teacher" class="btn btn-primary btn-default" style="margin-left:65px;">Teacher</button>
+  <button id="product" class="btn btn-danger btn-default" style="margin-left:65px;">College</button>
+  </th>
+</tr>
+
+</table>
+
+    {% if form.field_errors %}
+      {% for error in form.field_errors %}
+        <div class="alert alert-danger alert-dismissable">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          {{ error }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+  <div id="human-form" class="signup">
+    <h2 style="color:green; font-weight:bold; font-border-color:white;">{% trans 'Sign up for schools : Student' %}</h2>
+
+
+    <form action="{% url 'signup_human' %}" method="post" role="form">
+      {% csrf_token %}
+
+          <div class="form-group{% if form_human.username.errors %} has-error{% endif %}">
+          <input type="text" class="form-control greentext" id="username" name="username" placeholder="username">
+          {% for error in form_human.username.errors %}
+            <label class="control-label greentext"><span class="greentext">{{ error }}</span></label>
+          {% endfor %}
+          </div>
+         <div class="form-group{% if form_human.email.errors %} has-error{% endif %}">
+          <input type="text" class="form-control greentext" id="email" name="email" placeholder="email">
+          {% for error in form_human.email.errors %}
+            <label class="control-label greentext"><span class="greentext">{{ error }}</span></label>
+          {% endfor %}
+          </div>
+         <div class="form-group{% if form_human.password.errors %} has-error{% endif %}">
+          <input type="password" class="form-control greentext" id="password" name="password" placeholder="password">
+          {% for error in form_human.password.errors %}
+            <label class="control-label greentext"><span class="greentext">{{ error }}</span></label>
+          {% endfor %}
+        </div>
+        <div class="form-group{% if form_human.college_name.errors %} has-error{% endif %}">
+          <input type="text" class="form-control greentext" id="college_name" name="college_name" placeholder="College Name">
+          {% for error in form_human.college_name.errors %}
+            <label class="control-label greentext"><span class="greentext">{{ error }}</span></label>
+          {% endfor %}
+        </div>
+
+        <div class="form-group{% if form_products.branch.errors %} has-error{% endif %}">
+          <input type="text" class="form-control greentext" id="branch" name="branch" placeholder="branch">
+          {% for error in form_products.branch.errors %}
+            <label class="control-label">{{ error }}</label>
+          {% endfor %}
+        </div>
+
+        <div class="form-group{% if form_human.gender.errors %} has-error{% endif %}">         
+               <select name = "gender" id = "gender" class="form-control greentext" placeholder="gender">
+                  <selected>
+                  <option>Gender</option>
+                  <option>Female</product>
+                  <option>Male</product>
+               </select>
+
+          {% for error in form_human.gender.errors %}
+            <label class="control-label greentext"><span class="greentext">{{ error }}</span></label>
+          {% endfor %}
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-default greentext" style="color:green;">{% trans 'SignUp' %}</button>
+          <a  href="{% url 'login' %}" class="btn btn-danger greentext" style="color: green; background-color: white">{% trans 'Login' %}</a>
+        </div>
+    </form>
+  </div> 
+
+  <div id="product-form" class="signup">
+    <h2 style="color:red; font-weight:bold; border-color:white;">{% trans 'Sign up for schools : College' %}</h2>
+
+  
+    <form action="{% url 'signup_products' %}" method="post" role="form">
+      {% csrf_token %}
+        <input type="hidden" name="is_product" value="1" >
+          <div class="form-group{% if form_products.username.errors %} has-error{% endif %}">
+          <input type="text" class="form-control redtext" id="username" name="username" placeholder="username">
+          {% for error in form_products.username.errors %}
+            <label class="control-label">{{ error }}</label>
+          {% endfor %}
+          </div>
+
+         <div class="form-group{% if form_products.email.errors %} has-error{% endif %}">
+          <input type="text" class="form-control redtext" id="email" name="email" placeholder="email">
+          {% for error in form_products.email.errors %}
+            <label class="control-label">{{ error }}</label>
+          {% endfor %}
+          </div>
+         <div class="form-group{% if form_products.password.errors %} has-error{% endif %}">
+          <input type="password" class="form-control redtext" id="password" name="password" placeholder="password">
+          {% for error in form_products.password.errors %}
+            <label class="control-label">{{ error }}</label>
+          {% endfor %}
+        </div>
+        <div class="form-group{% if form_products.college_name.errors %} has-error{% endif %}">
+          <input type="text" class="form-control redtext" id="college_name" name="college_name" placeholder="college name">
+          {% for error in form_products.college_name.errors %}
+            <label class="control-label">{{ error }}</label>
+          {% endfor %}
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-default redtext" style="color:red;">{% trans 'SignUp' %}</button>
+          <a  href="{% url 'login' %}" class="btn btn-danger redtext" style="color: red; background-color: white">{% trans 'Login' %}</a>
+        </div>
+    </form>
+  </div>  
+
+
+  <div id="teacher-form" class="signup">
+    <h2 style="color:#8EB1DB; font-weight:bold; border-color:white;">{% trans 'Sign up for schools : Teacher' %}</h2>
+
+  
+    <form action="{% url 'signup_teachers' %}" method="post" role="form">
+      {% csrf_token %}
+        <input type="hidden" name="is_product" value="1">
+          <div class="form-group{% if form_teachers.username.errors %} has-error{% endif %}">
+          <input type="text" class="form-control bluetext" id="username" name="username" placeholder="username">
+          {% for error in form_teachers.username.errors %}
+            <label class="control-label">{{ error }}</label>
+          {% endfor %}
+          </div>
+
+         <div class="form-group{% if form_teachers.email.errors %} has-error{% endif %}">
+          <input type="text" class="form-control bluetext" id="email" name="email" placeholder="email">
+          {% for error in form_teachers.email.errors %}
+            <label class="control-label">{{ error }}</label>
+          {% endfor %}
+          </div>
+         <div class="form-group{% if form_teachers.password.errors %} has-error{% endif %}">
+          <input type="password" class="form-control bluetext" id="password" name="password" placeholder="password">
+          {% for error in form_teachers.password.errors %}
+            <label class="control-label">{{ error }}</label>
+          {% endfor %}
+        </div>
+        <div class="form-group{% if form_teachers.college_name.errors %} has-error{% endif %}">
+          <input type="text" class="form-control bluetext" id="college_name" name="college_name" placeholder="college name">
+          {% for error in form_teachers.college_name.errors %}
+            <label class="control-label">{{ error }}</label>
+          {% endfor %}
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-default bluetext" style="color:#8EB1DB;">{% trans 'SignUp' %}</button>
+          <a  href="{% url 'login' %}" class="btn btn-primary bluetext" style="color: #8EB1DB; background-color: white">{% trans 'Login' %}</a>
+        </div>
+    </form>
+  </div>  
+
+
+
+</div>
+</div>
+  
+{% endblock body %}

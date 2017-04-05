@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+ 
+{% block title %}
+hohos - Welcome at hohos
+{% endblock %}
+
+{% block head %}
+  <script type = "text/javascript" src = "{% static 'jquery/jqueryui.js' %}"></script>
+  <link href="{% static 'css/profile.css' %}" rel="stylesheet">
+  <link href="{% static 'css/feeds.css' %}" rel="stylesheet"> 
+  <script src="{% static 'js/jquery.bullseye-1.0-min.js' %}"></script>
+  <script src="{% static 'js/feeds_profile.js' %}"></script>
+
+<style> 
+#downitems a {color: black;}
+#downitems i {color: white;}
+ 
+.container1 {   
+    width: 30em;  
+    overflow-x: auto;
+    white-space: nowrap; 
+}
+.navbar-fixed-top { 
+  margin-bottom: 0px !important;
+  background-color: #008080;
+}
+.jumbotron { 
+  position: relative; 
+  background-color:#008080; 
+  margin-top: -21px;
+}
+.greentext{color: #008080;}
+.name {color: yellow; }
+</style>
+{% endblock %}
+
+
+{% block jumbotron %}
+<div class="jumbotron">      
+  <div class="container">
+  <div class="row">
+      <div class="col-md-6">
+       <h2 style="text-align:center; margin-bottom:7px; margin-top:-10px;">What's Up!</h2>
+
+<table>
+  <tr>
+    <th>
+      <i class='fa fa-openid fa-1x fa-fw' style="color:gray;"></i>
+    </th>
+    <th style="color:white; font-size:16px;">
+      <span class="name">@hohos,</span> things talk, you can ask anything to your products, like you can talk to your cell phone, laptop etc. as if they are live, isn't it interesting?
+    <hr style="border-color:gray; margin-top:2px; margin-bottom:2px;">
+    </th>
+  </tr>
+  <tr>
+    <th>
+      <i class='fa fa-users fa-1x fa-fw' style="color:gray;"></i>
+    </th>
+    <th style="color:white; font-size:16px;">
+      <span class="name">@hohos,</span> you can like people, review them and also judge others views. Just go on their live profile, sounds cool!
+     <hr style="border-color:gray; margin-top:2px; margin-bottom:2px;">
+    </th>
+  </tr>
+  <tr>
+    <th>
+      <i class='fa fa-sign-language fa-1x fa-fw' style="color:gray;"></i>
+    </th>
+    <th style="color:white; font-size:16px;">
+      <span class="name">@hohos,</span> you can share your styles and see, how people do that, or if they could do that better!  hmmm awesome!
+    </th>
+  </tr>
+</table>
+<hr style="border-color:gray; margin-top:30px; margin-bottom:13px;" >
+<div style="margin-left:10px; color:white; font-size:17px;">
+    {% if request.user.is_authenticated %}
+    Begin with us, see what people are talking about hohos at our live profile
+    <a style="margin-left:150px; width:200px;" class="btn btn-lg btn-success" href="{% url 'feeds' %}" role="button"><i class="fa fa-superpowers fa-spin fa-1x fa-fw "></i>Welcome &raquo;</a>
+    {% else %}
+    Begin with us, see what people are talking about hohos at our live profile
+    <a style="margin-left:150px; width:200px;" class="btn btn-lg btn-success" href="{% url 'signup_human' %}" role="button"><i class="fa fa-superpowers fa-spin fa-1x fa-fw "></i>Welcome &raquo;</a>
+    {% endif %}
+</div>
+
+    </div>
+
+    <div class="col-md-6 ">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/6ySAZ3ChfrQ?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
+    <span style="color:white;">The video shows an examples of styling @hohos<i class="fa fa-hand-o-up fa-1x fa-fw"></i></span>
+    </div>
+  </div>  
+  </div>  
+  </div> 
+
+{% endblock %}
+
+
+{% block main_fluid %}
+
+<div class="row">
+	<div class="col col-md-4 col-md-offset-1" style="max-height:500px; overflow:scroll;">
+  <table>
+    <tr>
+    <th colspan="10" float="left"><div><i style="margin-left: 85px;color:green;" class='fa fa-users fa-2x fa-fw'></th>
+    <th colspan="10" float="left"><div><i style="color: green;" class='fa fa-refresh fa-spin fa-2x fa-fw'></th>
+    <th colspan="10" float="center" style="color:green;">People are talking ...</th>
+    </tr>
+  </table><hr style="border-color:#008080;">
+	<ul class="stream">
+   {% if all_profile_feeds %} 
+    {% for feed in all_profile_feeds %}
+    {% include 'feeds/partial_feed_profile.html' with feed=feed %}
+    {% endfor %}
+   {% endif %}
+  <table>
+    <tr>
+    <th colspan="10" float="left"><div><i style="margin-left: 85px;color:green;" class='fa fa-users fa-2x fa-fw'></th>
+    <th colspan="10" float="center"><a style="color:green;" href="{% url 'signup_human' %}">..... Say something about people live!<i class="fa fa-smile-o fa-1x" aria-hidden="true"></i><i class="fa fa-smile-o fa-1x" aria-hidden="true"></i>hohoos!</a></th>
+    </tr>
+  </table>
+  </ul>
+	</div>
+
+	<div class="col col-md-4 col-md-offset-1" style="max-height:500px; overflow:scroll;">
+  <table>
+    <tr>
+    <th colspan="10" float="left"><i style="margin-left: 85px;color:red;" class='fa fa-openid fa-2x fa-fw'></th>
+    <th colspan="10" float="left"><i style="color: red;" class='fa fa-refresh fa-spin fa-2x fa-fw'></th>
+    <th colspan="10" float="left" style="color:red;">Products are talking ...</th>
+    </tr>
+  </table><hr style="border-color:#008080;">
+		<ul class="stream">
+      {% if all_product_profile_feeds %}
+        {% for feed in all_product_profile_feeds %}
+        {% include 'feeds/partial_feed_profile.html' with feed=feed %}
+        {% endfor %}	
+      {% endif %}
+    <table>
+    <tr>
+    <th colspan="10" float="left"><i style="color:red;" class='fa fa-openid fa-2x fa-fw'></th>
+    <th colspan="10" float="center"><a style="color:red;" href="{% url 'signup_human' %}">..... Talk your Products as if they are live!<i class="fa fa-smile-o fa-1x" aria-hidden="true"></i><i class="fa fa-smile-o fa-1x" aria-hidden="true"></i>hohoos!</a></th>
+    </tr>
+  </table>  
+    </ul>	
+	</div>	
+</div>
+<br><hr style="border-color:#008080;">
+
+
+<div class="row">
+  <div class="col col-md-4 col-md-offset-1" style="max-height:500px; overflow:scroll;">
+  <table>
+    <tr>
+    <th colspan="10" float="left"><div><i style="margin-left: 85px; color:green;" class='fa fa-openid fa-2x fa-fw'></th>
+    <th colspan="10" float="left"><div><i style="color:green;" class='fa fa-refresh fa-spin fa-2x fa-fw'></th>
+    <th colspan="10" style="color:green;" float="left">Trending challenges ...</th>
+    </tr>
+  </table><hr style="border-color:#008080;">
+  <ul class="stream">
+  {% if most_liked_feed_today %}
+  <h3><small>by<a href="{% url 'profile' most_liked_feed_today.user.username %}">{{most_liked_feed_today.user.profile.get_screen_name}}</a></small></h3>
+  <a href="{% url 'special_feeds' most_liked_feed_today.id %}"><img src="{{most_liked_feed_today.post_pic.url}}" class="img img-responsive"></a>
+  {% endif %}
+
+    {% for style in most_liked_challenge_feeds %}
+    {% include 'feeds/partial_challenge_feed.html' with feed=style%}
+    {% endfor %}
+
+    </ul> 
+  </div> 
+  <div class="col col-md-4 col-md-offset-1" style="max-height:500px; overflow:scroll;">
+  <table>
+    <tr>
+    <th colspan="10" float="left"><div><i style="margin-left: 85px; color: red;" class='fa fa-openid fa-2x fa-fw'></th>
+    <th colspan="10" float="left"><div><i style="color: red;" class='fa fa-refresh fa-spin fa-2x fa-fw'></th>
+    <th colspan="10" style="color:red;" float="left">Response for most liked Challenge ...</th>
+    </tr>
+  </table><hr style="border-color:#008080;">    
+    <ul class="stream">
+        {% for feed in style_feeds %}
+        {% include 'feeds/partial_feeds_feed.html' with feed=feed %}
+        {% endfor %}
+        </ul>
+  </div> 
+</div><hr style="border-color:#008080;">
+
+
+<div class="row">
+
+  <div class="col col-md-4 col-md-offset-1">
+      <img style="margin-left:120px; margin-top:85px;" src="{% static 'img/hohos.gif' %}" class="img img-responsive">
+    <a style="margin-left:160px; margin-right:50px;" type="button" class="btn btn-success" href="">  
+<!-- this url will be set to a constant
+      account of hohos so, it will be done when its launched  --> 
+      <span class="glyphicon glyphicon-share-alt"></span>Talk to us @hohos</a>
+  </div>
+
+  <div class="col col-md-4 col-md-offset-1" style="max-height:450px; overflow:scroll;">
+    <table style="margin-top:50px;"> 
+    <tr>
+    <th colspan="10" float="left"><div></th>
+    <th colspan="10" float="left"><div><i style="color: green;" class='fa fa-users fa-2x fa-fw'></th>
+    <th style="color:red;" colspan="10" float="left"> Begin with us, Say something about Us @hohos...</th>
+    </tr>
+  </table>
+  <ul class="stream">
+    <table style="margin-top:10px;">
+    <tr>
+    <th colspan="10" float="left"><div></th>
+    <th colspan="10" float="left"><div><i style="color: #008080; margin-left:35px;" class='fa fa-refresh fa-spin fa-2x fa-fw'></th>
+    <th style="color:green;" colspan="10" float="left"> Here's what people are already talking ...</th>
+    </tr>
+  </table>
+  {% for feed in hohos_feeds %}
+  {% include 'feeds/partial_feed_profile.html' %}
+  {% endfor %}
+  </ul>
+  </div>
+</div>
+
+{% endblock main_fluid %}
+
+
+
+
+{% block footer %}
+
+<footer style="background-color:#008080;">
+<div id="downitems" class="container-fluid" style='padding: 10px; margin-top: 70px; height: 50px; background-color: #008080;'>
+<p style="text-align:center;">
+  
+  <a href="{% url 'contact' %}"><i class="fa fa-volume-control-phone fa-1x fa-fw"></i>Contact</a> | 
+  <a href="https://www.linkedin.com/in/hohos-guys-48082313a/"><i class="fa fa-linkedin fa-1x fa-fw"></i>LinkedIn</a> | 
+  <a href="https://www.facebook.com/Hohos-1825301447690434/"><i class="fa fa-facebook fa-1x fa-fw"></i>Facebook</a> | 
+  <a href="https://twitter.com/hohosguys"><i class="fa fa-twitter fa-1x fa-fw"></i>Twitter</a> | 
+  <a href="https://www.quora.com/profile/Hohos-Guys"><i class="fa fa-quora fa-1x fa-fw"></i>Quora</a> | 
+  <a href="https://plus.google.com/u/0/114682388073028099952"><i class="fa fa-google-plus fa-1x fa-fw"></i>Google+</a> | 
+  <a href="">Hohos</a>
+
+
+</p>
+</div>
+</footer>
+
+ {% endblock %} 
+
+
+
+
+
+
+

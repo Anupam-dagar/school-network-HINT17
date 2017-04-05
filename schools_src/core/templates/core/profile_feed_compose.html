@@ -1,0 +1,98 @@
+{% load staticfiles %} 
+{% load i18n%}
+ 
+    <div style=""> 
+      <div>  
+       <div class="page-header"> 
+        {% if user in page_user.profile.get_likers or user == page_user %}
+        {% if user == page_user %}
+        <button type="button" class="btn btn-primary pull-right btn-compose" title="{% trans 'use ctrl+p to share something' %}">
+        <span class="glyphicon glyphicon-share-alt"></span> 
+        {{user}}{% trans ", Tell people whats up with you..." %}
+        </button>        
+        {% else %} 
+        <button type="button" class="btn btn-primary pull-right btn-compose" title="{% trans 'use ctrl+p to share something' %}">
+        <span class="glyphicon glyphicon-share-alt"></span> 
+        {{user}}{% trans ",if you'd liked to say something about ," %}{{page_user.profile.get_screen_name}}
+        </button>
+        {% endif %} 
+        {% elif request.user.is_authenticated %}
+        <!-- <p id="suggest">Hey {{user}}, Like {{page_user.profile.get_screen_name}} to Share something about {{page_user}}</p> -->
+        {% endif %}  
+
+        {% if not request.user.is_authenticated %}
+        <button type="button" class="btn btn-primary pull-right btn-compose" title="{% trans 'use ctrl+p to share something' %}">
+        <span class="glyphicon glyphicon-share-alt"></span> 
+        {% trans "Beho ,Begin saying something about us @hohoos ..." %}
+        </button>
+        {% endif %} 
+        <br> 
+        </div> 
+
+        <div class="panel panel-default panel-feed">
+        <div class="panel-heading">
+        {% if request.user == page_user %}
+          <table>
+            <tr>
+              <th colspan="10" float="left"><div><i style="margin-left: 10px;color:green;" class='fa fa-users fa-2x fa-fw'></th>
+              <th colspan="10" float="left"><div><i style="color: #008080;" class='fa fa-refresh fa-spin fa-2x fa-fw'></th>
+              <th colspan="10" float="center" style="color:green;">{% trans "Here's what people are talking about You" %}</th>
+            </tr>
+          </table>
+        {% else %}
+          <table>
+            <tr>
+              <th colspan="10" float="left"><div><i style="margin-left: 10px;color:green;" class='fa fa-users fa-2x fa-fw'></th>
+              <th colspan="10" float="left"><div><i style="color: #008080;" class='fa fa-refresh fa-spin fa-2x fa-fw'></th>
+              <th colspan="10" float="center" style="color:green;">{% trans "Here's what people are talking about " %}{{ page_user.profile.get_screen_name }}</th>
+            </tr>
+          </table>
+        {% endif %}
+        </div>
+        
+        <div class="panel-body">
+          <div class="compose">
+            {% if request.user == page_user %}
+            <h2>{% trans "Share!... " %}</h2>
+            {% else %}
+            <h2>{% trans "Say something about " %}{{ page_user.profile.get_screen_name }}</h2>
+            {% endif %}
+
+
+<form method="post" action="{% url 'new_post' %}" enctype="multipart/form-data">
+              
+              {% csrf_token %}
+              <table>
+                <input type="hidden" name="to_user" value="{{page_user.username}}" >
+                <input type="hidden" name="profile_pk" value="{{page_user.profile.pk}}">
+              <tr>
+                <th colspan="15" align="left">
+              <div class="form-group">
+                <textarea class="form-control" rows="1" name="post" style="width:476px; height:49px; font-size:15px; margin-right:20px"
+                placeholder="{% trans 'anything you would like to share' %}"required="True">
+                </textarea>
+              </div>
+              </th>
+              </tr>
+            </table>
+
+            <table>
+            <tr>
+            <th colspan="3" align="left"><input type="file" name="post_pic" style="max-width:250px;"> </th>
+            <th style="margin-left:15px;" colspan="5" align="right">
+            <button type="button" class="btn btn-default btn-cancel-compose pull-right">{% trans 'Cancel' %}
+            </button>
+            <button style="margin-right:5px; margin-left:45px;" type="submit" class="btn btn-primary my pull-right">
+            <span class="glyphicon glyphicon-send"></span> {% trans 'Share' %}
+            </button>
+            </th>
+          </tr>
+        </table>
+      </form>
+
+
+           </div>
+          </div>
+         </div> 
+        </div>
+      </div>

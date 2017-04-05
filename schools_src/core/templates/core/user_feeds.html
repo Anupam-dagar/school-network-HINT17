@@ -1,0 +1,318 @@
+{% extends 'base.html' %}
+{% load staticfiles %}   
+{% load i18n %} 
+
+
+{% block title %}
+  {% if request.user == page_user %}
+   schools -  Everything you share at schools
+  {% else %}
+   schools -  Everything {{ page_user.profile.get_screen_name }} share at schools 
+  {% endif %}
+{% endblock %}
+
+
+{% block head %}   
+  <link href="{% static 'css/feeds.css' %}?v=1" rel="stylesheet">
+  <script src="{% static 'js/jquery.bullseye-1.0-min.js' %}"></script>
+  <script src="{% static 'js/feeds.js' %}?v=1"></script>
+<style type="text/css">
+.btn-compose,.my {background-color:#008080;}
+.mytext{color:#008080;}
+.greentext {color: #2ABE5E}
+.white {color: white;}
+.bottom_gap {margin-bottom: 7px;}
+.center {margin-left: 50px;}
+.redtext{color: red}
+.about {margin-top: 20px;}
+.about li {color: #008080; list-style: none; padding:3px; margin-left: -35px;}
+.about h3{color: green; margin-left: 0px;}
+
+ul.stream li div.feed-container:hover{
+  cursor: pointer;
+  background-color: #f5f8fa;
+} 
+</style>
+{% endblock head %}  
+  
+
+{% block main %}
+ 
+<div class="row">
+    <div class="col-md-4 user-profile">
+        <a href="#">
+        <img src="{{page_user.profile.get_picture}}" class="img img-responsive">
+        </a> 
+
+        <table style="margin-top:7px; margin-bottom:7px; margin-left:50px;">
+        <tr>
+        <th colspan="5" align="left">
+      {% if page_user.profile.likes %}
+        <button type="button" class="btn btn-danger" title="Like {{ page_user.profile.get_screen_name }} on live profile to share your feeling!!" style="color:pink;">
+        <span  class="glyphicon glyphicon-heart"></span> 
+        {% trans 'Likers' %} {{ page_user.profile.likes}}
+        </button> 
+      {% else %}
+      {% endif %}
+
+      {% if page_user.profile.likes_to %}
+        <button type="button" class="btn btn-success" title="{{page_user}} is liking {{ page_user.profile.likes_to }} people!">
+        <span  class="glyphicon glyphicon-heart"></span> 
+        {% trans 'Likes to' %} {{ page_user.profile.likes_to }}
+        </button>
+      {% else %}
+        <button type="button" class="btn btn-success" title="{{page_user}} is liking {{ page_user.profile.likes_to }} people!">
+        <span  class="glyphicon glyphicon-heart"></span> 
+        {% trans 'Likes to no one' %} 
+        </button>
+      {% endif %}
+        </th>
+        </tr>
+        </table>
+
+<ul class="about">
+
+ {% if page_user.profile.status %}
+  <hr style="border-color: #008080; margin-left:-35px;">
+  <table style="margin-left:-35px; ">
+    <tr>
+      <th colspan="7" float="left" style="margin-left:-35px;">
+        Status
+      </th>
+      <th style="color:green;">
+      <!-- <i class='fa fa-openid fa-1x fa-fw' style="color:green;"></i> -->
+      <span style="color:green; font-weight:bold; margin-left:15px;">{{page_user.profile.status}}</span>
+      </th>
+    </tr>
+  </table>
+   <hr style="border-color:#008080; margin-left:-35px;">
+  {% endif %} <br>
+
+
+  {% if page_user.profile.want_to_do %}
+  <li>
+    <i class='fa fa-dot-circle-o fa-1x fa-fw'></i>
+    {{page_user.profile.want_to_do}}
+  </li>
+  {% endif %}
+
+  {% if page_user.profile.job %}
+  <li>
+    <i class='fa fa-briefcase fa-1x fa-fw'></i>
+    {{page_user.profile.job}}
+  </li>
+  {% endif %}
+
+  {% if page_user.profile.institute %}
+  <li>
+    <i class='fa fa-university fa-1x fa-fw'></i>
+    {{page_user.profile.institute}}
+  </li>
+  {% endif %}
+
+  {% if page_user.profile.company %}
+  <li>
+    <i class='fa fa-company fa-1x fa-fw'></i>
+    {{page_user.profile.company}}
+  </li>
+  {% endif %}
+
+  {% if page_user.profile.birth_date %}
+  <li>
+    <i class='fa fa-birthday-cake fa-1x fa-fw'></i>
+    {{page_user.profile.birth_date}}
+  </li>
+  {% endif %}
+
+  {% if page_user.profile.home %}
+  <li>
+    <i class='fa fa-home fa-1x fa-fw'></i>
+    {{page_user.profile.home}}
+  </li>
+  {% endif %}
+
+  {% if page_user.profile.website %}
+  <li>
+    <i class='fa fa-external-link-square fa-1x fa-fw'></i>
+    <a href="{{page_user.profile.get_website}}">{{page_user.profile.website}}</a>
+  </li>
+  {% endif %}
+
+  {% if page_user.profile.email %}
+  <li>
+    <i class='fa fa-envelope fa-1x fa-fw'></i>
+    {{page_user.profile.email}}
+  </li>
+  {% endif %}
+
+  <h3><small><i class='fa fa-sign-language fa-1x fa-fw'></i></small>Social Life</h3>
+
+  {% if page_user.profile.facebook %}
+  <li>
+    <i class='fa fa-facebook fa-1x fa-fw'></i>
+    <a href="{{page_user.profile.get_facebook}}">
+    {{page_user.profile.facebook}}</a>
+  </li>
+  {% endif %}
+
+  {% if page_user.profile.quora %}
+  <li>
+    <i class='fa fa-quora fa-1x fa-fw'></i>
+    <a href="{{page_user.profile.get_quora}}">
+    {{page_user.profile.quora}}</a>
+  </li>
+  {% endif %}
+
+  {% if page_user.profile.twitter %}
+  <li>
+    <i class='fa fa-twitter fa-1x fa-fw'></i>
+    <a href="{{page_user.profile.get_twitter}}">
+    {{page_user.profile.twitter}}</a>
+  </li>
+  {% endif %}
+
+  {% if page_user.profile.linkedin %}
+  <li>
+    <i class='fa fa-linkedin fa-1x fa-fw'></i>
+    <a href="{{page_user.profile.get_linkedin}}">
+    </a>
+  </li>
+  {% endif %}
+
+  {% if page_user == request.user %}
+  <li>
+    {% if page_user.profile.likes_to %}
+    <i class='fa fa-heart fa-1x fa-fw'></i>
+    You like <a href="{% url 'likes_to' page_user.username %}">
+    {{page_user.profile.likes_to}} people
+    </a> 
+    {% endif %}
+  </li> 
+  {% else %}
+  <li>
+    {% if page_user.profile.likes_to %}
+    <i class='fa fa-heart fa-1x fa-fw'></i>
+    {{page_user.profile.get_screen_name}} likes 
+    <a href="{% url 'likes_to' page_user.username %}">{{page_user.profile.likes_to}} people
+    </a> 
+    {% endif %}
+  </li>
+  {% endif %}
+
+  {% if page_user == request.user %}
+  <li>
+    {% if page_user.profile.likes %}
+    <i class='fa fa-heart fa-1x fa-fw'></i>
+     <a href="{% url 'profile_likers' page_user.username %}">{{page_user.profile.likes}} people</a> like You
+     {% endif %}
+  </li> 
+  {% else %}
+  <li>
+    {% if page_user.profile.likes %}
+    <i class='fa fa-heart fa-1x fa-fw'></i>
+     <a href="{% url 'profile_likers' page_user.username %}">{{page_user.profile.likes}} people</a> like
+    {{page_user.profile.get_screen_name}}
+    {% endif %}
+  </li>
+  {% endif %}
+
+  {% if page_user.profile.likes_most %}
+    {% if page_user == request.user %}
+    <li>
+      <i class='fa fa-heart fa-1x fa-fw'></i>
+      You like {{page_user.profile.likes_most}} most
+    </li> 
+    {% else %}
+    <li>
+      <i class='fa fa-heart fa-1x fa-fw'></i>
+      {{page_user.profile.get_screen_name}} likes {{page_user.profile.likes_most}} most
+    </li>
+    {% endif %}
+  {% endif %}
+
+  {% if page_user.profile.likes_not %}
+    {% if page_user == request.user %}
+    <li>
+      <i class='fa fa-heart fa-1x fa-fw'></i>
+      You like {{page_user.profile.likes_not}} not at all
+    </li>
+    {% else %}
+    <li>
+      <i class='fa fa-heart fa-1x fa-fw'></i>
+      {{page_user.profile.get_screen_name}} likes {{page_user.profile.likes_not}} not at all
+    </li>
+    {% endif %}
+  {% endif %}
+
+</ul> 
+
+        </div>
+
+
+    <div class="col-md-6">
+
+        {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ message }}
+          </div>
+        {% endfor %}
+        {% endif %}
+        
+        <div style="margin-top:25px;" class="page-header">    
+          
+          <h1 style=" margin-bottom:10px; margin-left:50px;" class="greentext">{% trans 'All ' %}
+          {% if request.user == page_user %}
+          <a href="{% url 'profile' page_user.username %}" title="Your schoolss !!">
+          <span class="mytext">You</span>
+          </a>
+          {% trans ' have shared on schools!' %}
+          </h1>
+          {% else %}
+          <a href="{% url 'profile' page_user.username %}">
+          <span class="mytext">{{ page_user.profile.get_screen_name }}</span>
+          </a>
+          {% trans ' has shared on schools!' %}
+          </h1>
+          {% endif %}  
+
+<!--           {% if request.user == page_user %}
+          <a href="{% url 'profile' page_user.username %}" class="btn my white center" title="{% trans 'Go to your live profile' %}">
+          <span class="glyphicon glyphicon-share-alt"></span> 
+          {% trans 'See what people are talking about you school!! ' %}
+          </a>
+          {% else %}
+          <a href="{% url 'profile' page_user.username %}" class="btn my white center" title="{% trans 'Go to live profile of ' %}{{ page_user.profile.get_screen_name }}">
+          <span class="glyphicon glyphicon-share-alt"></span> 
+          {% trans 'Share your feelings about ' %}{{ page_user.username }}
+          </a>
+          {% endif %} -->
+        </div><br>
+          
+<!--           <div class="stream-update">
+            <a href="#"><span class="new-posts"></span> {% trans 'new Talks' %}</a>
+          </div> -->
+
+          <ul class="stream">
+            {% for feed in user_feeds %}
+            {% include 'feeds/partial_feeds_feed.html' with feed=feed %}
+            {% endfor %} 
+          </ul>
+ 
+          <div class="load">
+            <img src="{% static 'img/loading.gif' %}">
+          </div>
+          
+          <form method="get" action="{% url 'load' %}" id="load_feed" autocomplete="off">
+            <!-- {% csrf_token %}  csrf token is not used in GET METHOD-->   
+            <input type="hidden" name="profile_pk" id="profile_pk" value="">
+            <input type="hidden" name="page_user_name" id="page_user_name" value="{{page_user.username}}">
+            <input type="hidden" name="feed_source" id="feed_source" value="user_feeds">
+            <input type="hidden" name="from_feed" value="{{ from_feed }}">
+            <input type="hidden" name="page" value="{{ page }}">
+          </form>
+        </div>
+      </div>
+ 
+{% endblock main %}

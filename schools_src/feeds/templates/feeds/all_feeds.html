@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load staticfiles %}   
+{% load i18n %}
+ 
+{% block title %}schools - feeds {% endblock %}
+ 
+{% block head %}  
+  <link href="{% static 'css/feeds.css' %}?v=1" rel="stylesheet">
+  <script src="{% static 'js/jquery.bullseye-1.0-min.js' %}"></script>
+  <script src="{% static 'js/feeds.js' %}?v=1"></script>
+  <link href="{% static 'css/feeds_sidebar.css' %}?v=1" rel="stylesheet"> 
+<style type="text/css">
+.nostyle li{list-style: none;}
+.btn-compose,.my {background-color:#008080;}
+.mytext{color:#008080;}
+.circle {color:green;}  
+
+ul.stream_sidebar li div.feed-container:hover{ 
+  cursor: pointer; 
+  background-color: #f5f8fa;
+} 
+ul.stream li div.feed-container:hover{
+  cursor: pointer; 
+  background-color: #f5f8fa;
+}  
+</style> 
+  
+{% endblock %} 
+
+  
+{% block main_fluid %} 
+
+  
+  <div class="row">
+    <div class="col col-md-6 col-md-offset-3">
+        {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ message }}
+           <!--  {{active_users}} -->
+          </div>
+        {% endfor %}
+        {% endif %}
+
+
+      <div style="margin-top:25px;" class="page-header">
+        <span>Things happening around other College</span>
+        <button type="button" class="btn btn-primary pull-right btn-compose" title="{% trans 'Press Ctrl + P to compose' %}">
+          <span class="glyphicon glyphicon-share-alt"></span> 
+          {% trans 'Share whats up in your college' %}
+
+        </button>
+
+      </div>
+ 
+
+      <div class="panel panel-default panel-feed">
+        <div class="panel-heading">
+        <table>
+          <tr>
+            <th colspan="10" float="left"><div><i style="margin-left: 10px;color:green;" class='fa fa-users fa-2x fa-fw'></th>
+            <th colspan="10" float="left"><div><i style="color: #008080;" class='fa fa-refresh fa-2x fa-fw'></th>
+            <th colspan="10" float="center" style="color:green; margin-right:50px;">See whats happening around other colleges ...</th>
+            </tr>
+        </table>
+        </div>
+
+        <div class="panel-body">
+          <div class="compose">
+            <h2 class="mytext">{% trans "Whats up in your college?" %}</h2>
+           <form method="post" action="{% url 'new_post' %}" enctype="multipart/form-data">
+              
+              {% csrf_token %}
+
+              <table>
+              <tr>
+                <th colspan="15" align="left">
+              <div class="form-group">
+                <textarea class="form-control" rows="1" name="post" style="width:476px; height:49px; font-size:15px; margin-right:20px"
+                placeholder="{% trans 'anything you would like to share' %}"required="True">
+                </textarea>
+              </div>
+              </th>
+              </tr>
+            </table>
+
+            <table>
+            <tr>
+            <th colspan="3" align="left"><input type="file" name="post_pic" style="max-width:250px;"> </th>
+            <th style="margin-left:15px;" colspan="5" align="right">
+            <button type="button" class="btn btn-default btn-cancel-compose pull-right">{% trans 'Cancel' %}
+            </button>
+            <button style="margin-right:5px; margin-left:45px;" type="submit" class="btn btn-primary my pull-right">
+            <span class="glyphicon glyphicon-send"></span> {% trans 'Share' %}
+            </button>
+            </th>
+          </tr>
+        </table>
+      </form><hr>
+    </div>
+
+<!--           <div class="stream-update">
+            <a href="#"><span class="new-posts"></span> {% trans 'new Style' %}</a>
+          </div>  -->
+          
+          <ul class="stream">
+            {% for feed in all_feeds %}
+            {# if user in feed.user.profile.get_likers #}
+              {% include 'feeds/partial_feeds_feed.html' with feed=feed %} 
+            {# endif #}
+            {% endfor %} 
+          </ul>
+
+          <div class="load">
+            <img src="{% static 'img/loading.gif' %}">
+          </div>
+          
+          <form method="get" action="{% url 'load' %}" id="load_feed" autocomplete="off">
+
+            <input type="hidden" name="feed_source" id="feed_source" value="all_feeds">
+            <input type="hidden" name="from_feed" value="{{ from_feed }}">
+            <input type="hidden" name="page" value="{{ page }}">
+          
+          </form>
+        </div> 
+      </div>
+    </div>
+</div> 
+
+{% endblock main_fluid %}

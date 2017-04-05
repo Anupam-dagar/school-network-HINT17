@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load staticfiles %}   
+{% load i18n %} 
+ 
+
+
+{% block title %}hohos - People live{% endblock %}
+
+{% block head %}
+  <link href="{% static 'css/feeds.css' %}?v=1" rel="stylesheet">
+  <script src="{% static 'js/jquery.bullseye-1.0-min.js' %}"></script>
+  <script src="{% static 'js/feeds_profile.js' %}?v=1"></script>
+<style type="text/css">
+.btn-compose,.my {background-color:#008080;}
+.mytext{color:#008080;}
+.mytextwhite{color:white;} 
+</style>
+{% endblock head %}  
+   
+
+{% block main %}
+
+    <div class="col-md-6 col-md-offset-3">
+        {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ message }}
+          </div>
+        {% endfor %}
+        {% endif %}
+ 
+       <div class="page-header">
+      
+      <table>
+        <tr>
+          <span style="font-size:16px; color:gray; margin-left:55px;">See what people are talking about one another, @hohos</span>
+          <hr style="border-color:lightgray;">
+        </tr>   
+          <tr>
+          <th colspan="10" float="left"><div><i style="margin-left: 50px; color:#008B5E;" class='fa fa-users fa-3x fa-fw'></th>
+          <th colspan="10" float="left"><div><i style="color: #008B5E;" class='fa fa-refresh fa-spin fa-3x fa-fw'></th>
+         <th colspan="10" float="center" style="color:#008B5E; margin-right:50px;">Talk live ...</th>
+          <th colspan="10" float="left"><div><i style="margin-left: 70px;color:#008B5E;" class='fa fa-users fa-3x fa-fw'></th>
+          <th colspan="10" float="left"><div><i style="color: #008B5E;" class='fa fa-refresh fa-spin fa-3x fa-fw'></th>
+         <th colspan="10" float="center" style="color:#008B5E; margin-right:50px;">Be live ...</th>
+        </tr>
+      </table> <!--  <hr style="border-color:#008080;">  -->
+      </div>
+
+
+<!--           <li style="list-style:none;">
+              <h3><small style="margin-left:100px;">Talk people, Go on their Live profile ...</small></h3>
+          </li> 
+This li creates problem to load further posts
+        -->
+
+ <!--          <div class="stream-update">
+            <a href="#"><span class="new-posts"></span> {% trans 'new Style' %}</a>
+          </div> --> 
+
+          {% load el_pagination_tags %}
+
+          <ul class="stream">
+            {% paginate all_profile_feeds %}
+                {% for feed in all_profile_feeds %}
+                  {% include 'feeds/partial_feed_profile.html' with feed=feed %}
+                {% endfor %}
+            {% show_pages %}
+          </ul>
+
+
+
+          <div class="load">
+            <img src="{% static 'img/loading.gif' %}">
+          </div>
+          
+<!--           <form method="get" action="{% url 'load' %}" id="load_feed" autocomplete="off">
+
+            <input type="hidden" name="feed_source" id="feed_source" value="all_profile_feeds">
+            <input type="hidden" name="from_feed" value="{{ from_feed }}">
+            <input type="hidden" name="page" value="{{ page }}">
+          
+          </form> -->
+        </div>   
+
+
+{% endblock main %}

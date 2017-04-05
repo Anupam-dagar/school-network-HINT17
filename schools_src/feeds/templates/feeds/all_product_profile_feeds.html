@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load staticfiles %}   
+{% load i18n %}   
+ 
+{% block title %}hohos - Products live {% endblock %}
+
+{% block head %} 
+   
+  <link href="{% static 'css/feeds.css' %}?v=1" rel="stylesheet">
+  <script src="{% static 'js/jquery.bullseye-1.0-min.js' %}"></script>
+  <script src="{% static 'js/feeds_profile.js' %}"></script>
+<style type="text/css">
+.btn-compose,.my {background-color:#008080;}
+.mytext{color:#008080;}
+.mytextwhite{color:white;}  
+ 
+ul.stream li div.feed-container:hover{ 
+  cursor: pointer;
+  background-color: #f5f8fa;
+} 
+</style> 
+{% endblock head %}  
+   
+ 
+{% block main %}
+ 
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ message }}
+          </div>
+        {% endfor %}
+        {% endif %}
+
+       <div class="page-header">
+      <table> 
+        <tr>
+          <span style="font-size:16px; color:gray; margin-left:75px;">Ask anything to your friend products, Go on their live profile @hohos</span>
+          <hr style="border-color:lightgray;">
+        </tr>
+          <tr>
+          <th colspan="10" float="left"><div><i style="color:#F34646; margin-left:60px;" class='fa fa-openid fa-3x fa-fw'></th>
+          <th colspan="10" float="left"><div><i style="color: #F34646;" class='fa fa-refresh fa-spin fa-3x fa-fw'></th>
+         <th colspan="10" float="center" style="color:#F34646; margin-right:50px;">Talk your products ...</th>
+          <th colspan="10" float="left"><div><i style="color:#F34646; margin-left:25px;" class='fa fa-openid fa-3x fa-fw'></th>
+          <th colspan="10" float="left"><div><i style="color: #F34646;" class='fa fa-refresh fa-spin fa-3x fa-fw'></th>
+         <th colspan="10" float="center" style="color:#F34646; margin-right:50px;">Stay updated ...</th>
+        </tr>
+      </table>   
+ 
+      </div>
+
+<!--  Bloody fucking li    
+        <li style="list-style:none;">
+              <h3><small style="margin-left:70px;">Ask anything to your products,Go on their Live profile ...</small></h3>
+            </li> -->
+
+<!--           <div class="stream-update">
+            <a href="#"><span class="new-posts"></span> {% trans 'new Style' %}</a>
+          </div>  -->
+
+          <ul class="stream">
+            {% for feed in all_product_profile_feeds %}
+              {% include 'feeds/partial_feed_profile.html' with feed=feed %}
+            {% endfor %}
+          </ul>
+
+          <div class="load">
+            <img src="{% static 'img/loading.gif' %}">
+          </div>
+          
+          <form method="get" action="{% url 'load' %}" id="load_feed" autocomplete="off">
+
+            <input type="hidden" name="feed_source" id="feed_source" value="all_product_profile_feeds">
+            <input type="hidden" name="from_feed" value="{{ from_feed }}">
+            <input type="hidden" name="page" value="{{ page }}">
+         
+          </form>
+        </div>
+      </div>     
+
+  
+
+
+
+{% endblock main %}

@@ -1,0 +1,439 @@
+{% load staticfiles %}
+{% load i18n %}
+
+<DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#db5945">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  
+  <title>Profile</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+  <link rel="stylesheet"  href="{% static 'css/style.css' %}">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"> 
+
+  <link href="{% static 'css/feeds.css' %}?v=1" rel="stylesheet">
+  <script src="{% static 'js/jquery.bullseye-1.0-min.js' %}"></script>
+  <script src="{% static 'js/feeds_profile.js' %}"></script>
+
+  <script src="{% static 'js/feeds.js' %}?v=1"></script>
+
+</head>
+<body>
+  
+
+{% include 'header.html' %}
+
+<div class="profile-container">
+  <div class="profile-head">
+    <div class="pic-container">
+      <div class="pic-wrapper">
+        <img src="{{page_user.profile.get_picture}}" alt="" class="profile-img">
+      </div>
+    </div>
+    <div class="profile-intro">
+      <h2>{{page_user.profile.get_screen_name}}</h2>
+      <h5>Teaches at {{page_user.profile.college_name}}</h5>
+
+
+   {% if request.user == page_user %}
+   {% else %}
+    <div id="profile-likes" class="pull-right">
+    
+    {% if not request.user in page_user.profile.get_likers %}
+      <p style="color:#008080;">Like to interact with {{page_user.username}}</p> 
+    {% else %}
+     <p style="color:#008080;">{% trans 'You like ' %}{{page_user.profile.get_screen_name}}</p>
+    {% endif %}
+      
+      <form role="form" id="like-form" > 
+      {% csrf_token %}
+      <input type="hidden" name="profile_pk" value="{{page_user.profile.id}}" >
+        {% if user in page_user.profile.get_likers %}
+          <button style="color:white; font-size:12px;" class="like unlike">
+            <span class="fa fa-thumbs-up fa-lg green"></span>
+            <span class="text">{% trans 'Unlike' %}</span>
+            (<span class="like-count">{{ page_user.profile.likes }}</span>)
+          </button>
+        {% else %}
+          <button style="color:white; font-size:12px;" class="like">
+            <span class="fa fa-thumbs-up fa-lg  green"></span>
+            <span class="text">{% trans 'Like' %}</span>
+            (<span class="like-count">{{ page_user.profile.likes }}</span>)
+          </button>
+        {% endif %}
+      </form>
+     </div>
+
+     {% endif %}
+
+
+    </div>
+  </div>
+  <div class="tab-container-main">
+      <div class="tab-container">
+        <div class="about-profile highlight">
+        <p>About</p>
+      </div>
+      <div class="feed unhighlight">
+      <p>Feed</p>
+     </div>
+     </div>
+  </div>
+  <!--profile info-->
+  <div class="profile-info">
+    <table class="table profile-info-table show-section">
+  <thead>
+    <!--<tr>
+      <th>First Name</th>
+      <th>Last Name</th>
+    </tr>-->
+  </thead>
+  <tbody>
+    <tr>
+      <td>College</td>
+      <td>{{page_user.profile.college_name}}</td>
+    </tr>
+    <tr>
+      <td>City</td>
+      <td>{{page_user.profile.home}}</td>
+    </tr>
+    <tr>
+      <td>Interested in </td>
+      <td>{{page_user.profile.want_to_do}}</td>
+    </tr>
+    <tr>
+      <td><a href="{% url 'profile_likers' page_user.username %}">Followers</a></td>
+      <td>{{page_user.profile.likes}}</td>
+    </tr>
+    <tr>
+      <td><a href="{% url 'likes_to' page_user.username %}">Following</a> </td>
+      <td>{{page_user.profile.likes_to}}</td>
+    </tr>
+  </tbody>
+</table>
+  <div class="col-md-6">
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+   {% if request.user == page_user %}
+   {% else %}
+    <div id="profile-likes" class="pull-right">
+    
+    {% if not request.user in page_user.profile.get_likers %}
+      <p style="color:#008080;">Like to interact with {{page_user.username}}</p> 
+    {% else %}
+     <p style="color:#008080;">{% trans 'You like ' %}{{page_user.profile.get_screen_name}}</p>
+    {% endif %}
+      
+      <form role="form" id="like-form" >
+      {% csrf_token %}
+      <input type="hidden" name="profile_pk" value="{{page_user.profile.id}}" >
+        {% if user in page_user.profile.get_likers %}
+          <button style="color:white; font-size:12px;" class="like unlike">
+            <span class="fa fa-thumbs-up fa-lg green"></span>
+            <span class="text">{% trans 'Unlike' %}</span>
+          </button>
+        {% else %}
+          <button style="color:white; font-size:12px;" class="like">
+            <span class="fa fa-thumbs-up fa-lg  green"></span>
+            <span class="text">{% trans 'Like' %}</span>
+          </button>
+        {% endif %}
+      </form>
+     </div>
+
+     {% endif %}
+
+        <ul style="margin-top:30px; margin-bottom:0px; font-weight:bold; color:#008080;">
+         
+        {% if request.user == page_user %}
+          <li><a href="{% url 'userfeeds' page_user.username %}">{% trans 'Your activities' %}</a></li>
+        {% else %}  
+          <li><a href="{% url 'userfeeds' page_user.username %}">{{page_user.username}}{% trans "'s activities" %}</a></li>
+        {% endif %}
+
+      <table>
+        <tr>
+          <th colspan="10" float="left"><div><i style="margin-left: 10px;color:green;" class='fa fa-openid fa-2x fa-fw'></th>
+          <!-- <th colspan="10" float="left"><div><i style="color: #008080;" class='fa fa-refresh fa-spin fa-1x fa-fw'></i></th> -->
+          <th colspan="10" float="center" style="color:green;"> <span style="font-weight:bold; color:green;">
+          {% if request.user.profile.status %}{{request.user.profile.status}}{% endif %}
+          </span></th>
+        </tr>
+      </table>
+
+          
+          {% if page_user.profile.want_to_do %}
+          <li>
+           <i class='fa fa-dot-circle-o fa-1x fa-fw'></i>
+           {{page_user.profile.want_to_do}}
+           </li>
+           {% endif %}
+
+        </ul><br>
+
+
+<!--   for profile likers  -->
+
+
+        <hr style="border-color:lightgray;">     
+
+  {% if likes_to_users %}
+
+    {% for user in likes_to_users %}
+
+      {% if user != page_user %}
+
+ <table>
+  
+  <tr>
+    <th colspan="5" float="left">
+      <span style="font-weight:bold;"><a href="{% url 'profile' user.username %}" style="color:gray; text-align:center;">{{user.profile.get_screen_name}}</a></span>
+      <a href="{% url 'profile' user.username %}">
+        <img src="{{user.profile.get_picture}}" class="img img-responsive" alt="image" style="height:200px; min-width:200px;">
+      </a>
+
+       <table style="margin-top:7px; margin-bottom:7px; margin-left:0px;">
+        <tr>
+        <th colspan="5" align="left">
+      {% if user.profile.likes %}
+        <button type="button" class="btn btn-danger btn-sm" title="Like {{ user.profile.get_screen_name }} on live profile to share your feeling!!" style="color:pink;">
+        <span  class="glyphicon glyphicon-heart"></span> 
+        {% trans 'Likers' %} {{ user.profile.likes}}
+        </button> 
+      {% else %}
+      {% endif %}
+
+
+      {% if user.profile.likes_to %}
+        <button type="button" class="btn btn-success btn-sm" title="{{user}} is liking {{ user.profile.likes_to }} people!">
+        <span  class="glyphicon glyphicon-heart"></span> 
+        {% trans 'Likes to' %} {{ user.profile.likes_to }}
+        </button>
+      {% else %}
+        <button type="button" class="btn btn-success btn-sm" title="{{user}} is liking {{ user.profile.likes_to }} people!">
+        <span  class="glyphicon glyphicon-heart"></span> 
+        {% trans 'Likes to no one' %} 
+        </button>
+      {% endif %}
+
+     {% if user.profile.status %}
+      <hr style="border-color: lightgray; margin-bottm:-10px;">
+        <table>
+          <tr>
+            <th colspan="7" float="left">
+            Status
+          </th>
+          <th style="color:green;">
+          <!-- <i class='fa fa-openid fa-1x fa-fw' style="color:green;"></i> -->
+          <span style="color:green; font-weight:bold; margin-left:10px;">{{user.profile.status}}</span>
+          </th>
+          </tr>
+        </table>
+      <hr style="border-color:lightgray;">
+      {% else %}
+      {% endif %}
+        </th>
+        </tr>
+        </table>
+    </th> 
+    <th colspan="10">
+
+
+      <ul class="about" style="min-width:300px;">
+
+  <li>
+    <i class='fa fa-user fa-1x fa-fw'></i>
+    <a href="{% url 'profile' user.username %}" style="color:gray;">{% trans 'Interact with ' %}{{user.username}}</a>
+    <hr style="border-color:lightgray; margin-bottom:2px; margin-top:2px;" >
+  </li>
+
+
+  {% if user.profile.want_to_do %}
+  <li>
+    <i class='fa fa-dot-circle-o fa-1x fa-fw'></i>
+    {{user.profile.want_to_do}}
+  </li>
+  {% endif %}
+
+  {% if user.profile.job %}
+  <li>
+    <i class='fa fa-briefcase fa-1x fa-fw'></i>
+    {{user.profile.job}}
+  </li>
+  {% endif %}
+
+  {% if user.profile.institute %}
+  <li>
+    <i class='fa fa-university fa-1x fa-fw'></i>
+    {{user.profile.institute}}
+  </li>
+  {% endif %}
+
+  {% if user.profile.company %}
+  <li>
+    <i class='fa fa-company fa-1x fa-fw'></i>
+    {{user.profile.company}}
+  </li>
+  {% endif %}
+
+  {% if user.profile.birth_date %}
+  <li>
+    <i class='fa fa-birthday-cake fa-1x fa-fw'></i>
+    {{user.profile.birth_date}}
+  </li>
+  {% endif %}
+
+  {% if user.profile.home %}
+  <li>
+    <i class='fa fa-home fa-1x fa-fw'></i>
+    {{user.profile.home}}
+  </li>
+  {% endif %}
+
+  {% if user.profile.website %}
+  <li>
+    <i class='fa fa-external-link-square fa-1x fa-fw'></i>
+    <a href="{{user.profile.get_website}}">{{user.profile.website}}</a>
+  </li>
+  {% endif %}
+
+  {% if user.profile.email %}
+  <li>
+    <i class='fa fa-envelope fa-1x fa-fw'></i>
+    {{user.profile.email}}
+  </li>
+  {% endif %}
+
+  <h3><small><i class='fa fa-sign-language fa-1x fa-fw'></i></small>Social Life</h3>
+
+  {% if user.profile.facebook %}
+  <li>
+    <i class='fa fa-facebook fa-1x fa-fw'></i>
+    <a href="{{user.profile.get_facebook}}">
+    {{user.profile.facebook}}</a>
+  </li>
+  {% endif %}
+
+  {% if user.profile.quora %}
+  <li>
+    <i class='fa fa-quora fa-1x fa-fw'></i>
+    <a href="{{user.profile.get_quora}}">
+    {{user.profile.quora}}</a>
+  </li>
+  {% endif %}
+
+  {% if user.profile.twitter %}
+  <li>
+    <i class='fa fa-twitter fa-1x fa-fw'></i>
+    <a href="{{user.profile.get_twitter}}">
+    {{user.profile.twitter}}</a>
+  </li>
+  {% endif %}
+
+  {% if user.profile.linkedin %}
+  <li>
+    <i class='fa fa-linkedin fa-1x fa-fw'></i>
+    <a href="{{user.profile.get_linkedin}}">
+    </a>
+  </li>
+  {% endif %}  
+
+
+  {% if user == request.user %}
+  <li>
+    {% if user.profile.likes_to %}
+    <i class='fa fa-heart fa-1x fa-fw'></i>
+    You like <a href="{% url 'likes_to' user.username %}">
+    {{user.profile.likes_to}} people
+    </a> 
+    {% endif %}
+  </li> 
+  {% else %}
+  <li>
+    {% if user.profile.likes_to %}
+    <i class='fa fa-heart fa-1x fa-fw'></i>
+    {{user.profile.get_screen_name}} likes 
+    <a href="{% url 'likes_to' user.username %}">{{user.profile.likes_to}} people
+    </a> 
+    {% endif %}
+  </li>
+  {% endif %}
+
+  {% if user == request.user %}
+  <li>
+    {% if user.profile.likes %}
+    <i class='fa fa-heart fa-1x fa-fw'></i>
+     <a href="{% url 'profile_likers' user.username %}">{{user.profile.likes}} people</a> like You
+     {% endif %}
+  </li> 
+  {% else %}
+  <li>
+    {% if user.profile.likes %}
+    <i class='fa fa-heart fa-1x fa-fw'></i>
+     <a href="{% url 'profile_likers' user.username %}">{{user.profile.likes}} people</a> like
+    {{user.profile.get_screen_name}}
+    {% endif %}
+  </li>
+  {% endif %}
+  
+
+  {% if user.profile.likes_most %}
+    {% if user == request.user %}
+    <li>
+      <i class='fa fa-heart fa-1x fa-fw'></i>
+      You like {{user.profile.likes_most}} most
+    </li> 
+    {% else %}
+    <li>
+      <i class='fa fa-heart fa-1x fa-fw'></i>
+      {{user.profile.get_screen_name}} likes {{user.profile.likes_most}} most
+    </li>
+    {% endif %}
+  {% endif %}
+
+  {% if user.profile.likes_not %}
+    {% if user == request.user %}
+    <li>
+      <i class='fa fa-heart fa-1x fa-fw'></i>
+      You like {{user.profile.likes_not}} not at all
+    </li>
+    {% else %}
+    <li>
+      <i class='fa fa-heart fa-1x fa-fw'></i>
+      {{user.profile.get_screen_name}} likes {{user.profile.likes_not}} not at all
+    </li>
+    {% endif %}
+  {% endif %}
+
+</ul> 
+    </th>
+  </tr>
+</table> <hr style="border-color:lightgray;" >
+
+        {% endif %}
+     {% endfor %}
+  {% endif %}
+ 
+  </div> 
+  </div>
+  
+</div>
+   
+</body>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script>
+
+</html>

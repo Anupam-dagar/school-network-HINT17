@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% load humanize %}
+
+
+{% block title %} {% trans 'hohos - Details ' %}
+
+  {% if feed.user.profile.is_product %}
+    {% trans 'on ' %}{{feed.user.username}} {% trans "'s profile view" %} 
+  {% else %}
+    {% if feed.profile_pk %}
+      {% trans 'on ' %}{{feed.user.username}} {% trans "'s profile view" %} 
+    {% elif feed.response_for %}
+      {% trans 'for ' %}{{feed.user.username}} {% trans "'s challenge style" %}
+  {% endif %}
+
+  {% endif %}
+
+{% endblock %} 
+
+
+ 
+{% block head %}
+  <link href="{% static 'css/feeds.css' %}" rel="stylesheet">
+  <script src="{% static 'js/jquery.bullseye-1.0-min.js' %}"></script>
+  <script src="{% static 'js/feeds.js' %}"></script>
+
+<style type="text/css">
+#downitems a {color: black;}
+#downitems i {color: white;}
+
+</style>
+{% endblock head %}
+
+{% block main %}
+<div class="col col-md-8 col-md-offset-2">
+
+       <div class="page-header">
+       
+<!--  -->
+       <hr style="border-color:lightgray;">
+      </div>
+
+
+
+  <ul class="stream" style="list-style:none;">
+  	{% if not feed.profile_pk %}
+    	{% include 'feeds/partial_detail_feed.html' with feed=feed %}
+    {% else %}
+    	{% include 'feeds/partial_detail_feed_profile.html' with feed=feed %}
+    {% endif %}
+  </ul>
+ </div>
+{% endblock main %}
+ 
+
+
+
+{% block footer %}
+
+<br><br><br><br><br><br><br><br><br>
+
+<footer style="background-color:#008080;">
+<div id="downitems" class="container-fluid" style='padding: 10px; margin-top: 70px; height: 50px; background-color: #008080;'>
+<p style="text-align:center;">
+  
+  <a href="{% url 'contact' %}"><i class="fa fa-volume-control-phone fa-1x fa-fw"></i>Contact</a> | 
+  <a href="https://www.linkedin.com/in/hohos-guys-48082313a/"><i class="fa fa-linkedin fa-1x fa-fw"></i>LinkedIn</a> | 
+  <a href="https://www.facebook.com/Hohos-1825301447690434/"><i class="fa fa-facebook fa-1x fa-fw"></i>Facebook</a> | 
+  <a href="https://twitter.com/hohosguys"><i class="fa fa-twitter fa-1x fa-fw"></i>Twitter</a> | 
+  <a href="https://www.quora.com/profile/Hohos-Guys"><i class="fa fa-quora fa-1x fa-fw"></i>Quora</a> | 
+  <a href="https://plus.google.com/u/0/114682388073028099952"><i class="fa fa-google-plus fa-1x fa-fw"></i>Google+</a> | 
+  <a href="">Hohos</a>
+
+
+</p>
+</div>
+</footer>
+
+ {% endblock %} 

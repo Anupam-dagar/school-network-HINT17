@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load staticfiles %}    
+{% load i18n %} 
+
+{% block title %}hohos - Share your new style{% endblock %}
+
+{% block head %}  
+  <link href="{% static 'css/feeds.css' %}?v=1" rel="stylesheet">
+    <link href="{% static 'css/feeds_sidebar.css' %}?v=1" rel="stylesheet">
+  <script src="{% static 'js/jquery.bullseye-1.0-min.js' %}"></script>
+  <script src="{% static 'js/feeds.js' %}?v=1"></script>
+
+<style type="text/css">
+.btn-compose,.my {background-color:#008080;}
+.mytext{color:#008080;} 
+
+ul.stream li div.feed-container:hover{
+  cursor: pointer; 
+  background-color: #f5f8fa; 
+} 
+
+ul.stream_sidebar li div.feed-container:hover{
+  cursor: pointer;
+  background-color: #f5f8fa;
+} 
+</style>
+{% endblock head %}    
+    
+
+{% block main %}
+  <div class="row">
+    {% for challenge in most_liked_challenge_feeds %}
+      <div class="col col-md-2" style="max-height:250px; overflow:scroll;">
+        <ul class="stream_sidebar">
+          {% include 'feeds/partial_challenge_feed_sidebar.html' with feed=challenge %}
+        </ul>
+      </div>
+    {% endfor %}
+  </div><hr style="border-color:#008080;">
+
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ message }}
+          </div>
+        {% endfor %}
+        {% endif %}
+      <div style="margin-top:25px;" class="page-header">
+
+  <table>
+    <tr>
+    <th colspan="10" float="right" style="color:green;">
+    <button style="margin-left:150px;" type="button" class="btn btn-primary pull-right btn-compose" title="{% trans 'Press Ctrl + P to share' %}">
+    <span class="glyphicon glyphicon-share-alt"></span> 
+    {% trans 'Did you find a new style? share Now!' %}
+    </button>
+    </th>
+    </tr>
+  </table>
+
+      </div>
+ 
+      <div class="panel panel-default panel-feed">
+        <div class="panel-heading">
+
+  <table>
+    <tr>
+    <th colspan="10" float="left"><div><i style="margin-left: 10px;color:green;" class='fa fa-users fa-2x fa-fw'></th>
+    <th colspan="10" float="left"><div><i style="color: #008080;" class='fa fa-refresh fa-spin fa-3x fa-fw'></th>
+    <th colspan="10" float="center" style="color:green; margin-right:50px;">See what people are sharing ...</th>
+    </tr>
+  </table>
+
+        </div>
+
+        <div class="panel-body">
+          <div class="compose">
+            <h2 class="mytext">{% trans "Share Your way, Hohoooo!" %}</h2>
+           <form method="post" action="{% url 'new_post' %}" enctype="multipart/form-data" class="responsive">
+              
+              {% csrf_token %}
+              <input type="hidden" name="response_for_id" value="">
+              <input type="hidden" name="is_challenge" value="1">
+              <table>
+              <tr>
+                <th colspan="15" align="left">
+              <div class="form-group">
+                <textarea class="form-control responsive" rows="1" name="post" style="width:476px; height:49px; font-size:15px; margin-right:20px"
+                placeholder="{% trans 'Say something about your style...' %}"required="True">
+                </textarea>
+              </div>
+              </th>
+              </tr>
+            </table>
+
+            <table> 
+            <tr>
+            <th colspan="3" align="left"><input type="file" name="post_pic" required="True" style="max-width:250px;"> </th>
+            <th style="margin-left:15px;" colspan="5" align="right">
+            <button type="button" class="btn btn-default btn-cancel-compose pull-right">{% trans 'Cancel' %}
+            </button>
+            <button style="margin-right:5px; margin-left:45px;" type="submit" class="btn btn-primary my pull-right">
+            <span class="glyphicon glyphicon-send"></span> {% trans 'Show now' %}
+            </button>
+            </th>
+          </tr>
+        </table>
+            </form>
+            <hr>
+            <br>
+          </div>
+
+<!--           <div class="stream-update">
+            <a href="#"><span class="new-posts"></span> {% trans 'new Style' %}</a>
+          </div>  -->
+          
+          <ul class="stream">
+
+            <!-- Remember that to comment the embeded python code in templates should be commented using python way({#  #}) -->
+            {% for feed in challenge_feeds %}
+            <!-- {# if user in feed.user.profile.get_likers #} -->
+              {% include 'feeds/partial_challenge_feed.html' with feed=feed %}
+            <!-- {# endif #} -->
+            {% endfor %} 
+          </ul>
+          <div class="load">
+            <img src="{% static 'img/loading.gif' %}">
+          </div>
+          
+          <form method="get" action="{% url 'load' %}" id="load_feed" autocomplete="off">  
+
+            <input type="hidden" name="feed_source" id="feed_source" value="challenge_feeds">
+            <input type="hidden" name="from_feed" value="{{ from_feed }}">
+            <input type="hidden" name="page" value="{{ page }}">
+          
+          </form>
+        </div>
+      </div>
+    </div>  
+   </div>    
+
+{% endblock main %}

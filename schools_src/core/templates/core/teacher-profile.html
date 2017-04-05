@@ -1,0 +1,144 @@
+{% load staticfiles %}
+{% load i18n %}
+
+<DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#db5945">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  
+  <title>Profile</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+  <link rel="stylesheet"  href="{% static 'css/style.css' %}">
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">  
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/hohos.css' %}?v=1" rel="stylesheet"> 
+    <script type = "text/javascript" src = "/static/jquery/jqueryui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="{% static 'js/hohos.js' %}"></script>
+
+  <link href="{% static 'css/feeds.css' %}?v=1" rel="stylesheet">
+  <script src="{% static 'js/jquery.bullseye-1.0-min.js' %}"></script>
+  <script src="{% static 'js/feeds_profile.js' %}"></script>
+
+  <script src="{% static 'js/feeds.js' %}?v=1"></script>
+
+</head>
+<body>
+   
+
+{% include 'header.html' %}
+
+<div class="profile-container">
+  <div class="profile-head">
+    <div class="pic-container">
+      <div class="pic-wrapper">
+        <img src="{{page_user.profile.get_picture}}" alt="" class="profile-img">
+      </div>
+    </div>
+    <div class="profile-intro">
+      <h2>{{page_user.profile.get_screen_name}}</h2>
+      <h5>Teaches at {{page_user.profile.college_name}}</h5>
+
+
+   {% if request.user == page_user %}
+   {% else %}
+    <div id="profile-likes" class="pull-right">
+    
+    {% if not request.user in page_user.profile.get_likers %}
+      <p style="color:#008080;">Like to interact with {{page_user.username}}</p> 
+    {% else %}
+     <p style="color:#008080;">{% trans 'You like ' %}{{page_user.profile.get_screen_name}}</p>
+    {% endif %}
+      
+      <form role="form" id="like-form" > 
+      {% csrf_token %}
+      <input type="hidden" name="profile_pk" value="{{page_user.profile.id}}" >
+        {% if user in page_user.profile.get_likers %}
+          <button style="color:white; font-size:12px;" class="like unlike">
+            <span class="fa fa-thumbs-up fa-lg green"></span>
+            <span class="text">{% trans 'Unlike' %}</span>
+            (<span class="like-count">{{ page_user.profile.likes }}</span>)
+          </button>
+        {% else %}
+          <button style="color:white; font-size:12px;" class="like">
+            <span class="fa fa-thumbs-up fa-lg  green"></span>
+            <span class="text">{% trans 'Like' %}</span>
+            (<span class="like-count">{{ page_user.profile.likes }}</span>)
+          </button>
+        {% endif %}
+      </form>
+     </div>
+
+     {% endif %}
+
+
+    </div>
+  </div>
+  <div class="tab-container-main">
+      <div class="tab-container">
+        <div class="about-profile highlight">
+        <p>About</p>
+      </div>
+      <div class="feed unhighlight">
+      <p>Feed</p>
+     </div>
+     </div>
+  </div>
+  <!--profile info-->
+  <div class="profile-info">
+    <table class="table profile-info-table show-section">
+  <thead>
+    <!--<tr>
+      <th>First Name</th>
+      <th>Last Name</th>
+    </tr>-->
+  </thead>
+  <tbody>
+    <tr>
+      <td>College</td>
+      <td>{{page_user.profile.college_name}}</td>
+    </tr>
+    <tr>
+      <td>City</td>
+      <td>{{page_user.profile.home}}</td>
+    </tr>
+    <tr>
+      <td>Interested in </td>
+      <td>{{page_user.profile.want_to_do}}</td>
+    </tr>
+    <tr>
+      <td><a href="{% url 'profile_likers' page_user.username %}">Followers</a></td>
+      <td>{{page_user.profile.likes}}</td>
+    </tr>
+    <tr>
+      <td><a href="{% url 'likes_to' page_user.username %}">Following</a> </td>
+      <td>{{page_user.profile.likes_to}}</td>
+    </tr>
+  </tbody>
+</table>
+<div class="feed-posts-container hide-section">
+  <h3>Fetching posts</h3>
+  	<div class="col col-md-8 col-md-offset-2">
+          <ul class="stream">
+            {% for feed in profile_feeds %}
+            {% include 'feeds/partial_feeds_feed.html' with feed=feed %}
+            {% endfor %}
+          </ul>
+  	</div>
+</div>
+  </div>
+  
+</div>
+   
+</body>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script>
+
+</html>
